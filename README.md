@@ -1,6 +1,6 @@
 ## 프론트엔드 배포 워크플로우
 
-<img src="src/images/workflow.png" alt="프론트엔드 배포 워크플로우" width="800"/>
+<img src="./images/workflow.png" alt="프론트엔드 배포 워크플로우" width="800"/>
 
 1. GitHub Repository: 프로젝트의 소스 코드가 저장된 저장소입니다.
 
