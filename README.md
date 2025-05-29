@@ -1,5 +1,9 @@
 ## 주요링크
 
+[S3 링크 ](http://hanghae-chapter-4-1.s3-website.ap-northeast-2.amazonaws.com/)
+
+[cloudFront 링크 ](https://d43x4f1rjhm0e.cloudfront.net/)
+
 ## 기본과제
 
 1.  GitHub Actions과 CI/CD 도구
@@ -275,3 +279,65 @@
     -   워크플로우 로그에 비밀 정보가 출력되지 않도록 주의합니다.
 
     -   필요하지 않은 Secrets와 환경 변수는 주기적으로 정리하여 보안을 강화합니다.
+
+## 성능 비교 분석 (S3 vs CloudFront)
+
+### 📊 Lighthouse 성능 측정 결과
+
+#### S3 호스팅 ([http://hanghae-chapter-4-1.s3-website.ap-northeast-2.amazonaws.com/](http://hanghae-chapter-4-1.s3-website.ap-northeast-2.amazonaws.com/))
+
+| 측정 항목                      | 점수        |
+| ------------------------------ | ----------- |
+| Performance                    | [72]        |
+| First Contentful Paint (FCP)   | [0.3s]      |
+| Largest Contentful Paint (LCP) | [0.8s]      |
+| Time to Interactive (TTI)      | [시간 입력] |
+| Total Blocking Time (TBT)      | [860ms]     |
+| Cumulative Layout Shift (CLS)  | [0]         |
+
+#### CloudFront 배포 ([https://d43x4f1rjhm0e.cloudfront.net/](https://d43x4f1rjhm0e.cloudfront.net/))
+
+| 측정 항목                      | 점수        |
+| ------------------------------ | ----------- |
+| Performance                    | [71]        |
+| First Contentful Paint (FCP)   | [0.3s]      |
+| Largest Contentful Paint (LCP) | [0.3s]      |
+| Time to Interactive (TTI)      | [시간 입력] |
+| Total Blocking Time (TBT)      | [1050ms]    |
+| Cumulative Layout Shift (CLS)  | [0]         |
+
+### 🔍 성능 차이 분석
+
+1. **응답 시간 (Latency)**
+
+    - S3: FCP 0.3s, LCP 0.8s로 초기 로딩 시간이 다소 긴 편입니다. TBT는 860ms로 측정되어 상호작용 지연이 발생합니다.
+    - CloudFront: FCP 0.3s, LCP 0.3s로 콘텐츠가 더 빠르게 표시되며, 특히 LCP가 S3 대비 0.5초 더 빠릅니다.
+    - 차이점: CloudFront가 LCP에서 눈에 띄는 성능 향상을 보여주나, TBT는 1050ms로 오히려 더 높게 나타났습니다. 이는 JavaScript 실행 시간과 관련이 있을 수 있습니다.
+
+2. **캐싱 효과**
+
+    - S3: 캐싱 기능이 없어 매 요청마다 원본 서버에서 콘텐츠를 가져와야 합니다. 이로 인해 LCP가 0.8s로 상대적으로 높게 측정됩니다.
+    - CloudFront: 엣지 로케이션에서의 캐싱으로 LCP가 0.3s로 크게 개선되었습니다. 특히 정적 자산들의 전송 속도가 향상되었습니다.
+    - 영향: 캐싱을 통해 LCP가 62.5% 개선되었으며, 이는 사용자 경험에 직접적인 영향을 미치는 중요한 성능 향상입니다.
+
+3. **지리적 위치에 따른 영향**
+    - S3: 서울 리전(ap-northeast-2)에서만 서비스되어, 한국 사용자에게는 빠른 응답을 제공하지만 해외 사용자들에게는 지연이 발생할 수 있습니다.
+    - CloudFront: 전 세계 엣지 로케이션을 통한 서비스로, 사용자의 위치와 관계없이 일관된 성능을 제공합니다.
+    - 결과: 현재 측정은 한국에서 진행되어 큰 차이가 없으나, 해외 사용자의 경우 CloudFront를 통한 배포가 훨씬 빠른 응답 시간을 제공할 것으로 예상됩니다.
+
+### 💡 결론
+
+CloudFront 배포가 전반적으로 더 나은 성능을 보여주고 있습니다. 특히 다음과 같은 이점이 있습니다:
+
+1. LCP가 0.5초 더 빠르며, 이는 사용자가 체감하는 로딩 속도에 직접적인 영향을 줍니다.
+2. 캐싱을 통한 정적 자산 제공으로 서버 부하가 감소합니다.
+3. 글로벌 사용자에게 일관된 성능을 제공할 수 있습니다.
+
+다만, TBT가 더 높게 측정된 부분은 추가적인 최적화가 필요한 영역으로 보입니다.
+
+### 📝 측정 환경
+
+-   측정 도구: Lighthouse (Chrome DevTools)
+-   네트워크 환경: 유선 인터넷 (한국 서울)
+-   측정 일시: 2025년 5월
+-   측정 횟수: 1회 측정의 평균값
