@@ -1,3 +1,19 @@
+## 프론트엔드 배포 워크플로우
+
+<img src="src/images/workflow.png" alt="프론트엔드 배포 워크플로우" width="800"/>
+
+1. GitHub Repository: 프로젝트의 소스 코드가 저장된 저장소입니다.
+
+2. GitHub Actions: 코드 변경 사항이 발생하면 자동으로 빌드 및 배포 프로세스를 실행하는 CI/CD 도구입니다.
+
+3. Build Process: 예를 들어, npm run build 명령어를 통해 정적 파일을 생성합니다.
+
+4. AWS S3: 빌드된 정적 파일을 저장하고, 정적 웹사이트 호스팅을 제공합니다.
+
+5. AWS CloudFront: S3에 저장된 콘텐츠를 전 세계 엣지 로케이션을 통해 빠르게 제공하는 CDN 서비스입니다.
+
+6. End Users: 최종 사용자는 CloudFront를 통해 웹사이트에 접근하여 콘텐츠를 빠르게 로드할 수 있습니다.
+
 ## 주요링크
 
 [S3 링크 ](http://hanghae-chapter-4-1.s3-website.ap-northeast-2.amazonaws.com/)
@@ -6,7 +22,7 @@
 
 ## 기본과제
 
-1.  GitHub Actions과 CI/CD 도구
+1.  **GitHub Actions과 CI/CD 도구**
 
     🔄 CI/CD개요
 
@@ -92,7 +108,7 @@
 
     -   Secrets는 리포지토리의 Settings > Secrets에서 설정할 수 있습니다.
 
-2.  S3와 스토리지
+2.  **S3와 스토리지**
 
     🗄️ AWS S3 및 스토리지 개념
 
@@ -120,7 +136,7 @@
 
     -   키(Key): 객체를 고유하게 식별하는 이름으로, 버킷 내에서 객체를 구분하는 데 사용됩니다.
 
-3.  CloudFront와 CDN
+3.  **CloudFront와 CDN**
 
     📌 CDN(Content Delivery Network)이란?
 
@@ -148,7 +164,7 @@
 
     -   디스트리뷰션(Distribution): CloudFront를 통해 콘텐츠를 배포하는 설정 단위로, 웹 또는 RTMP 배포를 구성할 수 있습니다
 
-4.  캐시 무효화(Cache Invalidation)
+4.  **캐시 무효화(Cache Invalidation)**
 
     📌 캐시 무효화 개요
 
@@ -193,7 +209,7 @@
 
         - app.js → app.v2.js
 
-5.  Repository secret과 환경변수
+5.  **Repository secret과 환경변수**
 
     📌 Repository Secrets란?
 
